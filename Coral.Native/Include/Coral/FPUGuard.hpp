@@ -34,6 +34,10 @@ namespace Coral {
 		alignas(16) char State[512];
 		FPUGuard()  { CORAL_FXSAVE(State); }
 		~FPUGuard() { CORAL_FXRSTOR(State); }
+#else
+		// No FPU state to preserve on non-x86 targets, but the deleted copy
+		// constructor below suppresses the implicit default one. Put it back.
+		FPUGuard() = default;
 #endif
 		FPUGuard(const FPUGuard&) = delete;
 		FPUGuard& operator=(const FPUGuard&) = delete;
